@@ -44,6 +44,8 @@ public class WordifyServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final String ERROR_MESSAGE = "Something went wrong... sorry";
+
+	private static final int MAX_OUTPUT_CHARS = 160;
 	
 	/**
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -66,18 +68,24 @@ public class WordifyServlet extends HttpServlet {
 
 			List<WordSequence> sequences = wordMap.wordify(number);
 
-			out.write("Your number is ");
+			StringBuilder message = new StringBuilder();
 
-			for (int s = 0; s < 3; ++s) {
+			// Make the longest list of sequences that fits in the max allowed characters
+			for (int s = 0; s < sequences.size(); ++s) {
 				WordSequence sequence = sequences.get(s);
-				String wordified = StringUtils.join(sequence, "-");
 
-				if (s > 0) {
-					out.write(" or ");
+				String item = (s > 0) ? ", " : "";
+				item += StringUtils.join(sequence, "-");
+
+				if (message.length() + item.length() <= MAX_OUTPUT_CHARS) {
+					message.append(item);
 				}
-
-				out.write(wordified);
+				else {
+					break;
+				}
 			}
+
+			out.write(message.toString());
 		}
 	}
 }
