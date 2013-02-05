@@ -1,6 +1,8 @@
 Wordify Readme
 ================
 
+Wordify is a webapp for generating mnenomics from telephone numbers.
+
 Usage
 -----
 

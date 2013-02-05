@@ -31,7 +31,7 @@ import java.util.*;
 /**
  * Map of number sequences to words
  */
-public class WordMap {
+public class Wordifier {
 
 	/**
 	 * Map of number sequences to list of words
@@ -41,11 +41,36 @@ public class WordMap {
 	private Random rand = new Random();
 
 	/**
-	 * Loads a word list from a reader
-	 * @param reader the reader
+	 * Constructs wordifier with only digits
+	 */
+	private Wordifier() {
+		// Add digits 0...9
+		for (int n = 0; n <= 9; ++n) {
+			addWord(n + "");
+		}
+	}
+
+	/**
+	 * Creates a wordifier from a word list
+	 * @param words the word list
+	 */
+	public static Wordifier fromWordlist(Collection<String> words) {
+		Wordifier wordifier = new Wordifier();
+
+		for (String word : words) {
+			wordifier.addWord(word);
+		}
+
+		return wordifier;
+	}
+
+	/**
+	 * Creates a wordifier from a word list
+	 * @param reader the reader for the word list
 	 * @throws IOException if reader couldn't be read
 	 */
-	public WordMap(Reader reader) throws IOException {
+	public static Wordifier fromWordlist(Reader reader) throws IOException {
+		Wordifier wordifier = new Wordifier();
 		BufferedReader buffered = new BufferedReader(reader);
 
 		String line = null;
@@ -55,15 +80,12 @@ public class WordMap {
 			if (word.length() == 0 || !StringUtils.isAlpha(word)) {
 				continue;
 			}
-			addWord(word);
+			wordifier.addWord(word);
 		}
 
 		buffered.close();
 
-		// Add digits 0...9
-		for (int n = 0; n <= 9; ++n) {
-			addWord(n + "");
-		}
+		return wordifier;
 	}
 
 	/**

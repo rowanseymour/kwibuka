@@ -20,7 +20,6 @@
 package com.ijuru.wordify;
 
 import junit.framework.Assert;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,35 +32,36 @@ import java.util.Set;
 /**
  *
  */
-public class WordMapTest {
+public class WordifierTest {
 
-	private static WordMap wordMap = null;
+	private static Wordifier wordifier = null;
 
 	@BeforeClass
 	public static void setup() throws IOException {
-		InputStreamReader reader = new InputStreamReader(WordMapTest.class.getClassLoader().getResourceAsStream("words.en.lst"));
-		wordMap = new WordMap(reader);
+		InputStreamReader reader = new InputStreamReader(WordifierTest.class.getClassLoader().getResourceAsStream("words.lst"));
+		wordifier = Wordifier.fromWordlist(reader);
 	}
 
 	@Test
 	public void wordify() {
-		List<WordSequence> sequences = wordMap.wordify("0783835665");
-
-		for (WordSequence sequence : sequences) {
-			System.out.println(StringUtils.join(sequence, "-"));
-		}
-
+		List<WordSequence> sequences = wordifier.wordify("2234");
 		Assert.assertNotNull(sequences);
+		Assert.assertEquals(5, sequences.size());
+
+		//for (WordSequence sequence : sequences) {
+		//	System.out.println(StringUtils.join(sequence, "-"));
+		//}
 	}
 
 	@Test
 	public void numberify() {
-		Assert.assertEquals("8378", WordMap.numberify("test"));
+		Assert.assertEquals("8378", Wordifier.numberify("test"));
+		Assert.assertEquals("8378", Wordifier.numberify("t3st"));
 	}
 
 	@Test
 	public void splitInput() {
-		List<Pair<Set<String>, String>> splits = wordMap.splitInput("234");
+		List<Pair<Set<String>, String>> splits = wordifier.splitInput("2234");
 
 		Assert.assertNotNull(splits);
 	}

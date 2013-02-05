@@ -20,7 +20,7 @@
 package com.ijuru.wordify.web;
 
 import com.ijuru.wordify.Context;
-import com.ijuru.wordify.WordMap;
+import com.ijuru.wordify.Wordifier;
 import com.ijuru.wordify.WordSequence;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
@@ -54,38 +54,51 @@ public class WordifyServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		PrintWriter out = response.getWriter();
+		String text = request.getParameter("text");
 		String number = request.getParameter("number");
 
+		if (text != null) {
+			// Strip keyword from incoming message and trim
+			text = StringUtils.stripStart(text.toLowerCase(), "digits").trim();
+
+			// Number specified in message overrides source number
+			if (StringUtils.isNumeric(text)) {
+				number = text;
+			}
+		}
+
+		// Can't do anything without a number
 		if (number == null) {
 			out.write(ERROR_MESSAGE);
+			return;
 		}
-		else {
-			if (Context.getOptions().getStripNumberPrefix() != null) {
-				number = StringUtils.removeStart(number, Context.getOptions().getStripNumberPrefix());
-			}
 
-			WordMap wordMap = Context.getWordMap();
-
-			List<WordSequence> sequences = wordMap.wordify(number);
-
-			StringBuilder message = new StringBuilder();
-
-			// Make the longest list of sequences that fits in the max allowed characters
-			for (int s = 0; s < sequences.size(); ++s) {
-				WordSequence sequence = sequences.get(s);
-
-				String item = (s > 0) ? ", " : "";
-				item += StringUtils.join(sequence, "-");
-
-				if (message.length() + item.length() <= MAX_OUTPUT_CHARS) {
-					message.append(item);
-				}
-				else {
-					break;
-				}
-			}
-
-			out.write(message.toString());
+		// Strip the number prefix
+		if (Context.getOptions().getStripNumberPrefix() != null) {
+			number = StringUtils.removeStart(number, Context.getOptions().getStripNumberPrefix());
 		}
+
+		Wordifier wordifier = Context.getWordifier();
+
+		List<WordSequence> sequences = wordifier.wordify(number);
+
+		StringBuilder message = new StringBuilder();
+
+		// Make the longest list of sequences that fits in the max allowed characters
+		for (int s = 0; s < sequences.size(); ++s) {
+			WordSequence sequence = sequences.get(s);
+
+			String item = (s > 0) ? ", " : "";
+			item += StringUtils.join(sequence, "-");
+
+			if (message.length() + item.length() <= MAX_OUTPUT_CHARS) {
+				message.append(item);
+			}
+			else {
+				break;
+			}
+		}
+
+		out.write(message.toString());
 	}
 }

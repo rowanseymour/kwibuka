@@ -35,7 +35,7 @@ public class Context {
 
 	private static Options options;
 
-	private static WordMap wordMap;
+	private static Wordifier wordifier;
 
 	/**
 	 * Starts the application
@@ -59,7 +59,7 @@ public class Context {
 		try {
 			InputStream stream = Context.class.getClassLoader().getResourceAsStream(wordListPath);
 
-			wordMap = new WordMap(new InputStreamReader(stream));
+			wordifier = Wordifier.fromWordlist(new InputStreamReader(stream));
 		}
 		catch (IOException ex) {
 			throw new Exception("Could not load word list resource (" + wordListPath + ")", ex);
@@ -74,7 +74,7 @@ public class Context {
 		return options;
 	}
 
-	public static WordMap getWordMap() {
-		return wordMap;
+	public static Wordifier getWordifier() {
+		return wordifier;
 	}
 }

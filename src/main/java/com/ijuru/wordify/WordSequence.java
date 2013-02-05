@@ -28,26 +28,49 @@ public class WordSequence extends ArrayList<String> implements Comparable<WordSe
 
 	private int score;
 
+	/**
+	 * Constructs an empty word sequence
+	 */
 	public WordSequence() {
 		super();
 	}
 
-	private WordSequence(ArrayList<String> existing) {
+	/**
+	 * Constructs a word sequence by copying an existing one
+	 * @param existing
+	 */
+	private WordSequence(WordSequence existing) {
 		super(existing);
+		this.score = existing.score;
 	}
 
+	/**
+	 * Clones this word sequence
+	 * @return a clone
+	 */
 	public WordSequence clone() {
 		return new WordSequence(this);
 	}
 
+	/**
+	 * Gets the score
+	 * @return the score
+	 */
 	public int getScore() {
 		return score;
 	}
 
+	/**
+	 * Sets the score
+	 * @param score the score
+	 */
 	public void setScore(int score) {
 		this.score = score;
 	}
 
+	/**
+	 * @see Comparable
+	 */
 	@Override
 	public int compareTo(WordSequence sequence) {
 		return sequence.score - score;
