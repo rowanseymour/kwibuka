@@ -36,7 +36,7 @@ public class WordMap {
 	/**
 	 * Map of number sequences to list of words
 	 */
-	private Map<String, List<String>> words = new HashMap<String, List<String>>();
+	private Map<String, Set<String>> words = new HashMap<String, Set<String>>();
 
 	private Random rand = new Random();
 
@@ -73,9 +73,9 @@ public class WordMap {
 	protected void addWord(String word) {
 		String numbers = numberify(word);
 
-		List<String> wordsForSequence = words.get(numbers);
+		Set<String> wordsForSequence = words.get(numbers);
 		if (wordsForSequence == null) {
-			wordsForSequence = new ArrayList<String>();
+			wordsForSequence = new HashSet<String>();
 			words.put(numbers, wordsForSequence);
 		}
 
@@ -87,33 +87,42 @@ public class WordMap {
 	 * @param numbers the number sequence
 	 * @return the list of word sequences
 	 */
-	public List<List<String>> wordify(String numbers) {
-		List<List<String>> results = new ArrayList<List<String>>();
+	public List<WordSequence> wordify(String numbers) {
+		List<WordSequence> results = new ArrayList<WordSequence>();
 
-		trySequence(results, new ArrayList<String>(), numbers);
+		// Generate all sequences
+		trySequence(results, new WordSequence(), numbers);
+
+		// Score each sequence
+		for (WordSequence sequence : results) {
+			sequence.setScore(scoreSequence(sequence));
+		}
+
+		// Sort by score descending
+		Collections.sort(results);
 
 		return results;
 	}
 
 	/**
-	 * Tries a sequence of words
-	 * @param completed
-	 * @param currentTokens
-	 * @param currentRemainder
+	 * Recursively tries sequences of words
+	 * @param completed the completed sequences
+	 * @param current the current sequence
+	 * @param remainder the input remainder
 	 */
-	protected void trySequence(List<List<String>> completed, List<String> currentTokens, String currentRemainder) {
+	protected void trySequence(List<WordSequence> completed, WordSequence current, String remainder) {
 
-		if (currentRemainder.length() == 0) {
-			completed.add(currentTokens);
+		if (remainder.length() == 0) {
+			completed.add(current);
 			return;
 		}
 
-		List<Pair<List<String>, String>> splits = splitInput(currentRemainder);
+		List<Pair<Set<String>, String>> splits = splitInput(remainder);
 
-		for (Pair<List<String>, String> split : splits) {
+		for (Pair<Set<String>, String> split : splits) {
 
 			for (String token : split.getLeft()) {
-				List<String> tokensCopy = new ArrayList<String>(currentTokens);
+				WordSequence tokensCopy = current.clone();
 				tokensCopy.add(token);
 
 				trySequence(completed, tokensCopy, split.getRight());
@@ -122,21 +131,30 @@ public class WordMap {
 	}
 
 	/**
+	 * Scores a word sequence
+	 * @param sequence the word sequence
+	 * @return the score
+	 */
+	protected int scoreSequence(WordSequence sequence) {
+		return 100 / sequence.size();
+	}
+
+	/**
 	 * Splits the input string all possible ways where the left hand side is a valid word or single digit
 	 * @param input the input string
 	 * @return the splits
 	 */
-	protected List<Pair<List<String>, String>> splitInput(String input) {
-		List<Pair<List<String>, String>> splits = new ArrayList<Pair<List<String>, String>>();
+	protected List<Pair<Set<String>, String>> splitInput(String input) {
+		List<Pair<Set<String>, String>> splits = new ArrayList<Pair<Set<String>, String>>();
 
 		for (int s = 0; s < input.length(); s++) {
 			String left = input.substring(0, s + 1);
 			String right = input.substring(s + 1, input.length());
 
-			List<String> wordsForLeft = words.get(left);
+			Set<String> wordsForLeft = words.get(left);
 
 			if (wordsForLeft != null) {
-				splits.add(new ImmutablePair<List<String>, String>(wordsForLeft, right));
+				splits.add(new ImmutablePair<Set<String>, String>(wordsForLeft, right));
 			}
 		}
 

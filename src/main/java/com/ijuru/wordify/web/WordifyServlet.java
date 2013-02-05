@@ -21,6 +21,7 @@ package com.ijuru.wordify.web;
 
 import com.ijuru.wordify.Context;
 import com.ijuru.wordify.WordMap;
+import com.ijuru.wordify.WordSequence;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -63,12 +64,19 @@ public class WordifyServlet extends HttpServlet {
 
 			WordMap wordMap = Context.getWordMap();
 
-			List<List<String>> sequences = wordMap.wordify(number);
+			List<WordSequence> sequences = wordMap.wordify(number);
 
-			for (List<String> sequence : sequences) {
+			out.write("Your number is ");
+
+			for (int s = 0; s < 3; ++s) {
+				WordSequence sequence = sequences.get(s);
 				String wordified = StringUtils.join(sequence, "-");
 
-				out.write(wordified + "<br/>");
+				if (s > 0) {
+					out.write(" or ");
+				}
+
+				out.write(wordified);
 			}
 		}
 	}

@@ -20,6 +20,7 @@
 package com.ijuru.wordify;
 
 import junit.framework.Assert;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,6 +28,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -43,7 +45,11 @@ public class WordMapTest {
 
 	@Test
 	public void wordify() {
-		List<List<String>> sequences = wordMap.wordify("0783835665");
+		List<WordSequence> sequences = wordMap.wordify("0783835665");
+
+		for (WordSequence sequence : sequences) {
+			System.out.println(StringUtils.join(sequence, "-"));
+		}
 
 		Assert.assertNotNull(sequences);
 	}
@@ -55,7 +61,7 @@ public class WordMapTest {
 
 	@Test
 	public void splitInput() {
-		List<Pair<List<String>, String>> splits = wordMap.splitInput("234");
+		List<Pair<Set<String>, String>> splits = wordMap.splitInput("234");
 
 		Assert.assertNotNull(splits);
 	}
