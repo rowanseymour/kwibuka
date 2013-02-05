@@ -63,11 +63,13 @@ public class WordifyServlet extends HttpServlet {
 
 			WordMap wordMap = Context.getWordMap();
 
-			List<String> words = wordMap.wordify(number);
+			List<List<String>> sequences = wordMap.wordify(number);
 
-			String wordified = StringUtils.join(words, "-");
+			for (List<String> sequence : sequences) {
+				String wordified = StringUtils.join(sequence, "-");
 
-			out.write("Your number is " + wordified);
+				out.write(wordified + "<br/>");
+			}
 		}
 	}
 }

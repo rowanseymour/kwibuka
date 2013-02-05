@@ -20,6 +20,8 @@
 package com.ijuru.wordify;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,61 +55,92 @@ public class WordMap {
 			if (word.length() == 0 || !StringUtils.isAlpha(word)) {
 				continue;
 			}
-
-			String numbers = numberify(word);
-
-			List<String> wordsForSequence = words.get(numbers);
-			if (wordsForSequence == null) {
-				wordsForSequence = new ArrayList<String>();
-				words.put(numbers, wordsForSequence);
-			}
-
-			wordsForSequence.add(word);
+			addWord(word);
 		}
 
 		buffered.close();
+
+		// Add digits 0...9
+		for (int n = 0; n <= 9; ++n) {
+			addWord(n + "");
+		}
 	}
 
 	/**
-	 * Converts the given number sequence to a sequence of words
-	 * @param numbers the number sequence
-	 * @return the words
+	 * Adds a word to the list
+	 * @param word the word
 	 */
-	public List<String> wordify(String numbers) {
-		List<String> tokens = new ArrayList<String>();
+	protected void addWord(String word) {
+		String numbers = numberify(word);
 
-		while (numbers.length() > 0) {
-			String token = null;
-
-			// No words for zero so its always a token
-			if (numbers.startsWith("0")) {
-				token = "0";
-			}
-			else {
-				String sequence = numbers;
-
-				while (sequence.length() > 0) {
-					List<String> wordsForSequence = words.get(sequence);
-
-					if (wordsForSequence != null) {
-						token = wordsForSequence.get(rand.nextInt(wordsForSequence.size()));
-						break;
-					}
-
-					sequence = sequence.substring(0, sequence.length() - 1);
-				}
-
-				if (token == null) {
-					token = numbers.substring(1);
-				}
-			}
-
-			// Munch token from input number
-			tokens.add(token);
-			numbers = numbers.substring(token.length(), numbers.length());
+		List<String> wordsForSequence = words.get(numbers);
+		if (wordsForSequence == null) {
+			wordsForSequence = new ArrayList<String>();
+			words.put(numbers, wordsForSequence);
 		}
 
-		return tokens;
+		wordsForSequence.add(word);
+	}
+
+	/**
+	 * Converts the given number sequence to a list of different sequences of words
+	 * @param numbers the number sequence
+	 * @return the list of word sequences
+	 */
+	public List<List<String>> wordify(String numbers) {
+		List<List<String>> results = new ArrayList<List<String>>();
+
+		trySequence(results, new ArrayList<String>(), numbers);
+
+		return results;
+	}
+
+	/**
+	 * Tries a sequence of words
+	 * @param completed
+	 * @param currentTokens
+	 * @param currentRemainder
+	 */
+	protected void trySequence(List<List<String>> completed, List<String> currentTokens, String currentRemainder) {
+
+		if (currentRemainder.length() == 0) {
+			completed.add(currentTokens);
+			return;
+		}
+
+		List<Pair<List<String>, String>> splits = splitInput(currentRemainder);
+
+		for (Pair<List<String>, String> split : splits) {
+
+			for (String token : split.getLeft()) {
+				List<String> tokensCopy = new ArrayList<String>(currentTokens);
+				tokensCopy.add(token);
+
+				trySequence(completed, tokensCopy, split.getRight());
+			}
+		}
+	}
+
+	/**
+	 * Splits the input string all possible ways where the left hand side is a valid word or single digit
+	 * @param input the input string
+	 * @return the splits
+	 */
+	protected List<Pair<List<String>, String>> splitInput(String input) {
+		List<Pair<List<String>, String>> splits = new ArrayList<Pair<List<String>, String>>();
+
+		for (int s = 0; s < input.length(); s++) {
+			String left = input.substring(0, s + 1);
+			String right = input.substring(s + 1, input.length());
+
+			List<String> wordsForLeft = words.get(left);
+
+			if (wordsForLeft != null) {
+				splits.add(new ImmutablePair<List<String>, String>(wordsForLeft, right));
+			}
+		}
+
+		return splits;
 	}
 
 	/**
@@ -120,7 +153,11 @@ public class WordMap {
 
 		for (int c = 0; c < word.length(); ++c) {
 			char ch = word.charAt(c);
-			if (ch <= 'c') {
+
+			if (Character.isDigit(ch)) {
+				numbers.append(ch);
+			}
+			else if (ch <= 'c') {
 				numbers.append(2);
 			}
 			else if (ch <= 'f') {

@@ -20,15 +20,43 @@
 package com.ijuru.wordify;
 
 import junit.framework.Assert;
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
 
 /**
  *
  */
 public class WordMapTest {
 
+	private static WordMap wordMap = null;
+
+	@BeforeClass
+	public static void setup() throws IOException {
+		InputStreamReader reader = new InputStreamReader(WordMapTest.class.getClassLoader().getResourceAsStream("words.en.lst"));
+		wordMap = new WordMap(reader);
+	}
+
+	@Test
+	public void wordify() {
+		List<List<String>> sequences = wordMap.wordify("0783835665");
+
+		Assert.assertNotNull(sequences);
+	}
+
 	@Test
 	public void numberify() {
 		Assert.assertEquals("8378", WordMap.numberify("test"));
+	}
+
+	@Test
+	public void splitInput() {
+		List<Pair<List<String>, String>> splits = wordMap.splitInput("234");
+
+		Assert.assertNotNull(splits);
 	}
 }
