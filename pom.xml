@@ -15,4 +15,10 @@
 		<module>sms</module>
 	</modules>
 
+	<scm>
+		<connection>scm:git:git@github.com:rowanseymour/wordify.git</connection>
+		<url>scm:git:git@github.com:rowanseymour/wordify.git</url>
+		<developerConnection>scm:git:git@github.com:rowanseymour/wordify.git</developerConnection>
+	</scm>
+
 </project>
