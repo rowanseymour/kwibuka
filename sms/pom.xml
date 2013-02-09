@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.ijuru</groupId>
 		<artifactId>wordify</artifactId>
-		<version>1.0</version>
+		<version>1.1-SNAPSHOT</version>
 	</parent>
 
     <artifactId>wordify-sms</artifactId>
@@ -17,7 +17,7 @@
 		<dependency>
 			<groupId>com.ijuru</groupId>
 			<artifactId>wordify-lib</artifactId>
-			<version>1.0</version>
+			<version>1.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
