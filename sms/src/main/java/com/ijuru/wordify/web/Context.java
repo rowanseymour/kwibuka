@@ -17,8 +17,9 @@
  * along with Wordify. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ijuru.wordify;
+package com.ijuru.wordify.web;
 
+import com.ijuru.wordify.Wordifier;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;

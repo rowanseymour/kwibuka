@@ -4,3 +4,5 @@
 *.iml
 .settings/*
 target/*
+lib/target/*
+sms/target/*
