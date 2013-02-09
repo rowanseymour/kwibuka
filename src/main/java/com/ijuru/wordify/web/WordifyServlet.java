@@ -55,7 +55,7 @@ public class WordifyServlet extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		String text = request.getParameter("text");
-		String number = request.getParameter("number");
+		String number = null;
 
 		if (text != null) {
 			// Strip keyword from incoming message and trim
@@ -67,15 +67,20 @@ public class WordifyServlet extends HttpServlet {
 			}
 		}
 
-		// Can't do anything without a number
+		// Default to sender's number
 		if (number == null) {
-			out.write(ERROR_MESSAGE);
-			return;
-		}
+			number = request.getParameter("number");
 
-		// Strip the number prefix
-		if (Context.getOptions().getStripNumberPrefix() != null) {
-			number = StringUtils.removeStart(number, Context.getOptions().getStripNumberPrefix());
+			// Can't do anything without a number
+			if (number == null) {
+				out.write(ERROR_MESSAGE);
+				return;
+			}
+
+			// Strip the number prefix
+			if (Context.getOptions().getStripNumberPrefix() != null) {
+				number = StringUtils.removeStart(number, Context.getOptions().getStripNumberPrefix());
+			}
 		}
 
 		Wordifier wordifier = Context.getWordifier();
@@ -89,7 +94,7 @@ public class WordifyServlet extends HttpServlet {
 			WordSequence sequence = sequences.get(s);
 
 			String item = (s > 0) ? ", " : "";
-			item += StringUtils.join(sequence, "-");
+			item += sequence.format();
 
 			if (message.length() + item.length() <= MAX_OUTPUT_CHARS) {
 				message.append(item);
