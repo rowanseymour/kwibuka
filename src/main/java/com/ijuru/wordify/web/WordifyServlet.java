@@ -46,6 +46,8 @@ public class WordifyServlet extends HttpServlet {
 	private static final String ERROR_MESSAGE = "Something went wrong... sorry";
 
 	private static final int MAX_OUTPUT_CHARS = 160;
+
+	private static final String SEQUENCE_SEPARATOR = "\n";
 	
 	/**
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -87,23 +89,28 @@ public class WordifyServlet extends HttpServlet {
 
 		List<WordSequence> sequences = wordifier.wordify(number);
 
-		StringBuilder message = new StringBuilder();
-
-		// Make the longest list of sequences that fits in the max allowed characters
-		for (int s = 0; s < sequences.size(); ++s) {
-			WordSequence sequence = sequences.get(s);
-
-			String item = (s > 0) ? ", " : "";
-			item += sequence.format();
-
-			if (message.length() + item.length() <= MAX_OUTPUT_CHARS) {
-				message.append(item);
-			}
-			else {
-				break;
-			}
+		if (sequences.size() == 0) {
+			out.write(ERROR_MESSAGE);
 		}
+		else {
+			StringBuilder message = new StringBuilder();
 
-		out.write(message.toString());
+			// Make the longest list of sequences that fits in the max allowed characters
+			for (int s = 0; s < sequences.size(); ++s) {
+				WordSequence sequence = sequences.get(s);
+
+				String item = (s > 0) ? SEQUENCE_SEPARATOR : "";
+				item += sequence.format();
+
+				if (message.length() + item.length() <= MAX_OUTPUT_CHARS) {
+					message.append(item);
+				}
+				else {
+					break;
+				}
+			}
+
+			out.write(message.toString());
+		}
 	}
 }

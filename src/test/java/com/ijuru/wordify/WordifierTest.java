@@ -48,9 +48,9 @@ public class WordifierTest {
 		Assert.assertNotNull(sequences);
 		Assert.assertEquals(5, sequences.size());
 
-		//for (WordSequence sequence : sequences) {
-		//	System.out.println(StringUtils.join(sequence, "-"));
-		//}
+		for (WordSequence sequence : sequences) {
+			System.out.println(sequence.format());
+		}
 	}
 
 	@Test

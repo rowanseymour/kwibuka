@@ -117,7 +117,7 @@ public class Wordifier {
 
 		// Score each sequence
 		for (WordSequence sequence : results) {
-			sequence.setScore(scoreSequence(sequence));
+			sequence.score();
 		}
 
 		// Sort by score descending
@@ -150,15 +150,6 @@ public class Wordifier {
 				trySequence(completed, tokensCopy, split.getRight());
 			}
 		}
-	}
-
-	/**
-	 * Scores a word sequence
-	 * @param sequence the word sequence
-	 * @return the score
-	 */
-	protected int scoreSequence(WordSequence sequence) {
-		return 100 / sequence.size();
 	}
 
 	/**
