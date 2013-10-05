@@ -1,23 +1,50 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ijuru</groupId>
-    <artifactId>wordify</artifactId>
-	<packaging>pom</packaging>
-    <version>1.1-SNAPSHOT</version>
+	<groupId>com.ijuru</groupId>
+	<artifactId>kwibuka</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	
+	<name>Kwibuka</name>
+	<description>Memnomic generator library</description>
 
-	<name>Wordify</name>
-
-	<modules>
-		<module>lib</module>
-		<module>sms</module>
-	</modules>
-
+	<developers>
+		<developer>
+			<id>rowanseymour</id>
+			<url>https://twitter.com/rowanseymour</url>
+		</developer>
+	</developers>
+	
 	<scm>
-		<connection>scm:git:git@github.com:rowanseymour/wordify.git</connection>
-		<url>scm:git:git@github.com:rowanseymour/wordify.git</url>
-		<developerConnection>scm:git:git@github.com:rowanseymour/wordify.git</developerConnection>
+		<connection>scm:git:git@github.com:rowanseymour/kwibuka.git</connection>
+		<developerConnection>scm:git:git@github.com:rowanseymour/kwibuka.git</developerConnection>
+		<url>scm:git:git@github.com:rowanseymour/kwibuka.git</url>
 	</scm>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+			<version>1.3</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 </project>

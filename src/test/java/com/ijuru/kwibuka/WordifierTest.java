@@ -17,7 +17,7 @@
  * along with Wordify. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ijuru.wordify;
+package com.ijuru.kwibuka;
 
 import junit.framework.Assert;
 import org.apache.commons.lang3.tuple.Pair;

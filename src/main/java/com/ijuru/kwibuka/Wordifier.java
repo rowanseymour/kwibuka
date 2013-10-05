@@ -17,7 +17,7 @@
  * along with Wordify. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ijuru.wordify;
+package com.ijuru.kwibuka;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -37,8 +37,6 @@ public class Wordifier {
 	 * Map of number sequences to list of words
 	 */
 	private Map<String, Set<String>> words = new HashMap<String, Set<String>>();
-
-	private Random rand = new Random();
 
 	/**
 	 * Constructs wordifier with only digits
@@ -73,7 +71,7 @@ public class Wordifier {
 		Wordifier wordifier = new Wordifier();
 		BufferedReader buffered = new BufferedReader(reader);
 
-		String line = null;
+		String line;
 		while((line = buffered.readLine()) != null) {
 			String word = line.toLowerCase();
 
