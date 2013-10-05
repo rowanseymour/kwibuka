@@ -19,29 +19,33 @@
 
 package com.ijuru.kwibuka;
 
-import junit.framework.Assert;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 /**
  *
  */
-public class WordifierTest {
+public class WordListWordifierTest {
 
-	private static Wordifier wordifier = null;
+	private static WordListWordifier wordifier = null;
 
 	@BeforeClass
 	public static void setup() throws IOException {
-		InputStreamReader reader = new InputStreamReader(WordifierTest.class.getClassLoader().getResourceAsStream("words.lst"));
-		wordifier = Wordifier.fromWordlist(reader);
+		InputStreamReader reader = new InputStreamReader(WordListWordifierTest.class.getClassLoader().getResourceAsStream("words.lst"));
+		wordifier = WordListWordifier.fromWordlist(new Locale("en"), reader);
 	}
 
+	/**
+	 * @see Wordifier#wordify(String)
+	 */
 	@Test
 	public void wordify() {
 		List<WordSequence> sequences = wordifier.wordify("2234");
@@ -53,12 +57,18 @@ public class WordifierTest {
 		}
 	}
 
+	/**
+	 * @see WordListWordifier#numberify(String)
+	 */
 	@Test
 	public void numberify() {
-		Assert.assertEquals("8378", Wordifier.numberify("test"));
-		Assert.assertEquals("8378", Wordifier.numberify("t3st"));
+		Assert.assertEquals("8378", WordListWordifier.numberify("test"));
+		Assert.assertEquals("8378", WordListWordifier.numberify("t3st"));
 	}
 
+	/**
+	 * @see WordListWordifier#splitInput(String)
+	 */
 	@Test
 	public void splitInput() {
 		List<Pair<Set<String>, String>> splits = wordifier.splitInput("2234");
